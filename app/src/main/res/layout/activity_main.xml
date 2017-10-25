@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main_drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/activity_main_coordinator_layout"
@@ -32,9 +33,9 @@
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorWhite"
+        app:itemBackground="@drawable/drawable_nav_item_bg"
         app:headerLayout="@layout/layout_nav_drawer_header"
-        app:itemIconTint="@color/colorPrimaryDark"
-        app:itemTextColor="@color/colorPrimaryDark"
+        app:itemIconTint="@drawable/drawable_nav_item_tint"
+        app:itemTextColor="@drawable/drawable_nav_item_tint"
         app:menu="@menu/menu_nav_drawer"/>
 </android.support.v4.widget.DrawerLayout>

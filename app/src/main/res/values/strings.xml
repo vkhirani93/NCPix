@@ -6,7 +6,7 @@
 
     <!-- Navigation Drawer -->
     <string name="nav_drawer_upload">Upload</string>
-    <string name="nav_drawer_view">View</string>
+    <string name="nav_drawer_gallery">Gallery</string>
     <string name="nav_drawer_open">Open</string>
     <string name="nav_drawer_close">Close</string>
 </resources>

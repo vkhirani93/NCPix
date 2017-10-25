@@ -11,4 +11,8 @@ public class Constant {
 
     //Debug Tag
     public static final String DEBUG_TAG = "NCPix";
+
+    //Fragment Tags
+    public static final String FRAG_UPLOAD = "Upload";
+    public static final String FRAG_GALLERY = "Gallery";
 }
