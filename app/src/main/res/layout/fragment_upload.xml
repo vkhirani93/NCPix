@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorWhite">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/layout_padding"
+        android:background="@drawable/drawable_border_right">
+
+        <ImageButton
+            android:id="@+id/fragment_upload_img_btn_picture"
+            android:layout_width="@dimen/upload_img_btn_radius"
+            android:layout_height="@dimen/upload_img_btn_radius"
+            android:background="@drawable/drawable_round_btn"
+            android:src="@drawable/ic_picture"/>
+
+        <TextView
+            android:id="@+id/fragment_upload_tv_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/upload_text_margin_top"
+            android:text="@string/upload_picture"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textAllCaps="true"
+            android:textColor="@color/colorMidnightGrey"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/layout_padding">
+
+        <ImageButton
+            android:id="@+id/fragment_upload_img_btn_video"
+            android:layout_width="@dimen/upload_img_btn_radius"
+            android:layout_height="@dimen/upload_img_btn_radius"
+            android:background="@drawable/drawable_round_btn"
+            android:src="@drawable/ic_video"/>
+
+        <TextView
+            android:id="@+id/fragment_upload_tv_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/upload_text_margin_top"
+            android:text="@string/upload_video"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textAllCaps="true"
+            android:textColor="@color/colorMidnightGrey"/>
+    </LinearLayout>
 </LinearLayout>

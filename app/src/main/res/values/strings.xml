@@ -9,4 +9,9 @@
     <string name="nav_drawer_gallery">Gallery</string>
     <string name="nav_drawer_open">Open</string>
     <string name="nav_drawer_close">Close</string>
+
+    <!-- Upload Fragment -->
+    <string name="upload_picture">Picture</string>
+    <string name="upload_video">Video</string>
+    <string name="camera_feature_missing">Oops... Your device does not have camera.</string>
 </resources>
