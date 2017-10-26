@@ -13,4 +13,9 @@
     <dimen name="upload_img_btn_radius">100dp</dimen>
     <dimen name="upload_items_padding">16dp</dimen>
     <dimen name="upload_text_margin_top">8dp</dimen>
+
+    <!-- Server Upload Fragment -->
+    <dimen name="server_upload_preview_width">250dp</dimen>
+    <dimen name="server_upload_preview_height">300dp</dimen>
+    <dimen name="server_upload_item_margin_top">16dp</dimen>
 </resources>

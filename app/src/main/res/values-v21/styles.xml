@@ -15,4 +15,8 @@
         <item name="spinBars">true</item>
         <item name="color">@color/colorWhite</item>
     </style>
+
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 </resources>

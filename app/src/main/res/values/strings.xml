@@ -2,6 +2,11 @@
     <!-- General Strings -->
     <string name="app_name">NCPix</string>
 
+    <!-- Alert Dialog Strings -->
+    <string name="alert_btn_ok">OK</string>
+    <string name="alert_title_feature_missing">Feature Missing</string>
+    <string name="alert_message_camera_missing">Oops... Your device does not have camera.</string>
+
     <!-- Screen specific strings -->
 
     <!-- Navigation Drawer -->
@@ -13,5 +18,7 @@
     <!-- Upload Fragment -->
     <string name="upload_picture">Picture</string>
     <string name="upload_video">Video</string>
-    <string name="camera_feature_missing">Oops... Your device does not have camera.</string>
+
+    <!-- Server Upload Fragment -->
+    <string name="server_upload">Upload</string>
 </resources>

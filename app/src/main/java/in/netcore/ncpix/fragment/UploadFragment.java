@@ -1,20 +1,34 @@
 package in.netcore.ncpix.fragment;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import in.netcore.ncpix.R;
 import in.netcore.ncpix.miscellaneous.Constant;
-import in.netcore.ncpix.miscellaneous.GeneralMethods;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by vrajesh on 10/25/17.
@@ -26,17 +40,18 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     private ImageButton imgBtnPicture;
     private ImageButton imgBtnVideo;
     private Intent intent;
+    private AlertDialog alertDialog;
+    private AlertDialog.Builder alertDialogBuilder;
 
-    GeneralMethods generalMethods;
+    private boolean imageCapture;
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.fragment_upload, container, false);
 
         imgBtnPicture = (ImageButton) view.findViewById(R.id.fragment_upload_img_btn_picture);
         imgBtnVideo = (ImageButton) view.findViewById(R.id.fragment_upload_img_btn_video);
 
-        generalMethods = new GeneralMethods();
+        checkCameraFeature();
 
         imgBtnPicture.setOnClickListener(this);
         imgBtnVideo.setOnClickListener(this);
@@ -44,12 +59,52 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        if(requestCode == Constant.PERMISSION_RECORD_AUDIO){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        boolean permissionExists = true;
+
+        for (String permission : permissions) {
+            if (getActivity().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionExists = false;
+            }
+        }
+
+        if(permissionExists){
+            if(imageCapture){
                 captureImage();
             }
+            else{
+                recordVideo();
+            }
+        }
+    }
+
+    /*
+    * Here we store the file url as it will be null after returning from camera app
+    * */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constant.URI_TAG, fileUri);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            fileUri = savedInstanceState.getParcelable(Constant.URI_TAG);
+        }
+    }
+
+    /*
+    * Receiving activity result method will be called after closing the camera
+    * */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            launchUploadServerFragment();
         }
     }
 
@@ -57,34 +112,15 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fragment_upload_img_btn_picture:
-                if(deviceHasCamera()){
-                    if(checkCameraPermission()){
-                        captureImage();
-                    }
-                }
-                else{
-                    Toast.makeText(getActivity(), R.string.camera_feature_missing, Toast.LENGTH_LONG).show();
-                }
+                imageCapture = true;
+                checkAllPermissions();
                 break;
 
             case R.id.fragment_upload_img_btn_video:
-                if(deviceHasCamera()){
-                    if(checkCameraPermission()){
-                        recordVideo();
-                    }
-                }
-                else{
-                    Toast.makeText(getActivity(), R.string.camera_feature_missing, Toast.LENGTH_LONG).show();
-                }
+                imageCapture = false;
+                checkAllPermissions();
                 break;
         }
-    }
-
-    /*
-    * Checking device has camera hardware or not
-    * */
-    private boolean deviceHasCamera() {
-        return getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) ? true : false;
     }
 
     private void captureImage() {
@@ -92,6 +128,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, Constant.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
 
@@ -101,17 +138,105 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, Constant.CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
     }
 
-    private boolean checkCameraPermission(){
-        if(generalMethods.hasRequestedPermission(getActivity(), Constant.PERMISSION_RECORD_AUDIO)){
-            return true;
+    private void checkAllPermissions(){
+        boolean permissionExists = true;
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
+            for (String permission : permissions) {
+                if (getActivity().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    permissionExists = false;
+                }
+            }
+        }
+
+        if(permissionExists){
+            if(imageCapture){
+                captureImage();
+            }
+            else{
+                recordVideo();
+            }
         }
         else{
-            String permissionType = generalMethods.getPermissionType(Constant.PERMISSION_RECORD_AUDIO);
-            requestPermissions(new String []{permissionType}, Constant.PERMISSION_RECORD_AUDIO);
-            return false;
+            requestPermissions(permissions, Constant.PERMISSION_RECORD_AUDIO_CODE + Constant.PERMISSION_WRITE_STORAGE_CODE);
         }
+    }
+
+    /*
+    * The function checks whether the phone has camera feature or not.
+    * */
+    private void checkCameraFeature(){
+        if(!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+               alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.CustomDialogStyle)
+                       .setTitle(getString(R.string.alert_title_feature_missing))
+                       .setMessage(getString(R.string.alert_message_camera_missing))
+                       .setCancelable(false)
+                       .setPositiveButton(getString(R.string.alert_btn_ok), new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               getActivity().finish();
+                           }
+                       });
+               alertDialog = alertDialogBuilder.create();
+               alertDialog.show();
+        }
+    }
+
+    private void launchUploadServerFragment(){
+        ServerUploadFragment serverUploadFragment = new ServerUploadFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.FILE_PATH_TAG, fileUri.toString());
+        bundle.putBoolean(Constant.FILE_TYPE_TAG, imageCapture);
+        serverUploadFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();;
+        fragmentTransaction.replace(R.id.activity_main_frame_layout, serverUploadFragment, Constant.FRAG_SERVER_UPLOAD);
+        fragmentTransaction.addToBackStack(serverUploadFragment.getClass().toString());
+        fragmentTransaction.commit();
+    }
+
+    /*
+    * Helper Methods are written here
+    * */
+
+    /*
+    * Creating URI to store image/video
+    * */
+    public Uri getOutputMediaFileUri(int type) {
+        return FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".miscellaneous.GeneralFileProvider", getOutputMediaFile(type));
+    }
+
+    /*
+    * Returning Image/Video
+    * */
+    private static File getOutputMediaFile(int type) {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constant.IMAGE_DIRECTORY_NAME);
+
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(Constant.DEBUG_TAG, "Oops! Failed create " + Constant.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File mediaFile;
+
+        if (type == Constant.MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+        } else if (type == Constant.MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
     }
 }
