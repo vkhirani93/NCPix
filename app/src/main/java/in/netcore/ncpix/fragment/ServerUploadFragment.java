@@ -97,7 +97,7 @@ public class ServerUploadFragment extends Fragment implements View.OnClickListen
         private String uploadFile() {
             String responseString = null;
 
-            HttpClient httpclient = new DefaultHttpClient();
+            HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(Constant.FILE_UPLOAD_URL);
 
             try {
@@ -115,7 +115,7 @@ public class ServerUploadFragment extends Fragment implements View.OnClickListen
                 totalSize = entity.getContentLength();
                 httpPost.setEntity(entity);
 
-                HttpResponse httpResponse = httpclient.execute(httpPost);
+                HttpResponse httpResponse = httpClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();
 
                 int statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -150,6 +150,7 @@ public class ServerUploadFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fragment_server_upload_btn_upload:
+                new UploadFileToServer().execute();
                 break;
         }
     }

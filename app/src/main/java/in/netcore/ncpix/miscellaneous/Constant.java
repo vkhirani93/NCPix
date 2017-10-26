@@ -30,6 +30,7 @@ public class Constant {
     public static final int PERMISSION_WRITE_STORAGE_CODE = 567;
 
     //Directory name and url to store images & videos
-    public static final String FILE_UPLOAD_URL = "http://192.168.50.166/opt/product1/papi/ncpix/fileUpload.php";
+    public static final String FILE_UPLOAD_URL = "http://192.168.1.14/ncpix/upload_file.php";
+//    public static final String FILE_UPLOAD_URL = "https://192.168.50.166/opt/product1/papi/ncpix/fileUpload.php";
     public static final String IMAGE_DIRECTORY_NAME = "NCPix";
 }
