@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_main_coordinator_layout);
         frameLayout = (FrameLayout) findViewById(R.id.activity_main_frame_layout);
-        toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.layout_toolbar_tb);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.activity_main_navigation_view);
 

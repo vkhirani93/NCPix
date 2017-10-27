@@ -19,7 +19,6 @@ public class Constant {
     //Fragment Tags
     public static final String FRAG_UPLOAD = "Upload";
     public static final String FRAG_GALLERY = "Gallery";
-    public static final String FRAG_SERVER_UPLOAD = "Server Upload";
 
     //Activity request codes
     public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -30,7 +29,7 @@ public class Constant {
     public static final int PERMISSION_WRITE_STORAGE_CODE = 567;
 
     //Directory name and url to store images & videos
-    public static final String FILE_UPLOAD_URL = "http://192.168.1.14/ncpix/upload_file.php";
-//    public static final String FILE_UPLOAD_URL = "https://192.168.50.166/opt/product1/papi/ncpix/fileUpload.php";
+//    public static final String FILE_UPLOAD_URL = "http://192.168.1.14/ncpix/upload_file.php";
+    public static final String FILE_UPLOAD_URL = "http://192.168.50.166:/opt/product1/papi/ncpix/upload_file.php";
     public static final String IMAGE_DIRECTORY_NAME = "NCPix";
 }

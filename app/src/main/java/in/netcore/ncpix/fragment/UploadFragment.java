@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import in.netcore.ncpix.R;
+import in.netcore.ncpix.activity.UploadActivity;
 import in.netcore.ncpix.miscellaneous.Constant;
 
 import static android.app.Activity.RESULT_OK;
@@ -104,7 +104,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK){
-            launchUploadServerFragment();
+            launchUploadActivity();
         }
     }
 
@@ -187,18 +187,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void launchUploadServerFragment(){
-        ServerUploadFragment serverUploadFragment = new ServerUploadFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(Constant.FILE_PATH_TAG, fileUri.toString());
-        bundle.putBoolean(Constant.FILE_TYPE_TAG, imageCapture);
-        serverUploadFragment.setArguments(bundle);
-
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();;
-        fragmentTransaction.replace(R.id.activity_main_frame_layout, serverUploadFragment, Constant.FRAG_SERVER_UPLOAD);
-        fragmentTransaction.addToBackStack(serverUploadFragment.getClass().toString());
-        fragmentTransaction.commit();
+    private void launchUploadActivity(){
+        intent = new Intent(getActivity(), UploadActivity.class);
+        intent.putExtra(Constant.FILE_PATH_TAG, fileUri.toString());
+        intent.putExtra(Constant.FILE_TYPE_TAG, imageCapture);
+        startActivity(intent);
     }
 
     /*
